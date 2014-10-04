@@ -1,99 +1,54 @@
 #include "vec3.h"
 
-Vec3::Vec3( float x, float y, float z )
-{
-    v0 = x;
-    v1 = y;
-    v2 = z;
-}
+Vec3::Vec3(float x, float y, float z):
+    x(x), y(y), z(z)
+{}
 
-Vec3&
-Vec3::operator=( const Vec3& rhs )
-{
-    this->v0 = rhs.v0;
-    this->v1 = rhs.v1;
-    this->v2 = rhs.v2;
+Vec3& Vec3::operator=(const Vec3& rhs){
+    Vec3 u = *this;
+    u.x = rhs.x;
+    u.y = rhs.y;
+    u.z = rhs.z;
     return *this;
 }
 
-Vec3
-Vec3::operator+( const Vec3& that )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    // "that" is a reference to the other vector (that.name)
-    Vec3 result;
-    result.v0 = ???;
-    result.v1 = ???;
-    result.v2 = ???;
-    return result;
+void Vec3::Print(char *str, FILE *fp){
+    Vec3 u = *this;
+    fprintf(fp, "%s [ %8.3f %8.3f %8.3f ]\n", str, u.x, u.y, u.z);
 }
 
-Vec3
-Vec3::operator-( const Vec3& that )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    // "that" is a reference to the other vector (that.name)
-    Vec3 result;
-    result.v0 = ???;
-    result.v1 = ???;
-    result.v2 = ???;
-    return result;
+Vec3 Vec3::operator+(const Vec3& v){
+    Vec3 u = *this;
+    return Vec3(u.x + v.x, u.y + v.y, u.z + v.z);
 }
 
-Vec3
-Vec3::operator-( )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    // there is no "that" here
-    Vec3 result;
-    result.v0 = ???;
-    result.v1 = ???;
-    result.v2 = ???;
-    return result;
+Vec3 Vec3::operator-(const Vec3& v){
+    Vec3 u = *this;
+    return Vec3(u.x - v.x, u.y - v.y, u.z - v.z);
 }
 
-Vec3
-Vec3::Cross( Vec3& that )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    // "that" is a reference to the other vector (that.name)
-    Vec3 result;
-    result.v0 = ???;
-    result.v1 = ???;
-    result.v2 = ???;
-    return result;
+Vec3 Vec3::operator-(){
+    Vec3 u = *this;
+    return Vec3(-u.x, -u.y, -u.z);
 }
 
-float
-Vec3::Dot( Vec3& that )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    // "that" is a reference to the other vector (that.name)
-    float d = ???;
-    return d;
+Vec3 Vec3::Unit(){
+    Vec3 u = *this;
+    float len = u.Length();
+    return Vec3(u.x / len, u.y / len, u.z / len);
 }
 
-float
-Vec3::Length( )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    float len = ???;
-    return len;
+Vec3 Vec3::Cross(Vec3& v){
+    Vec3 u = *this;
+    return Vec3(u.y*v.z + u.z*v.y, u.z*v.x + u.x*v.z, u.x*v.y + u.y*v.x);
 }
 
-void
-Vec3::Print( char *str, FILE *fp )
-{
-    fprintf( fp, "%s [ %8.3f %8.3f %8.3f ]\n", str, this->v0, this->v1, this->v2 );
+float Vec3::Dot(Vec3& v){
+    Vec3 u = *this;
+    return u.x*v.x + u.y*v.y + u.z*v.z;
 }
 
-Vec3
-Vec3::Unit( )
-{
-    // "this" is a pointer to this class's vec3  (this->name)
-    Vec3 result;
-    result.v0 = ???;
-    result.v1 = ???;
-    result.v2 = ???;
-    return result;
+float Vec3::Length(){
+    Vec3 u = *this;
+    return sqrt(pow(u.x, 2) + pow(u.y, 2) + pow(u.z, 2));
 }
