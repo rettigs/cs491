@@ -40,7 +40,7 @@ Vec3 Vec3::Unit(){
 
 Vec3 Vec3::Cross(Vec3& v){
     Vec3 u = *this;
-    return Vec3(u.y*v.z + u.z*v.y, u.z*v.x + u.x*v.z, u.x*v.y + u.y*v.x);
+    return Vec3(u.y*v.z - u.z*v.y, u.z*v.x - u.x*v.z, u.x*v.y - u.y*v.x);
 }
 
 float Vec3::Dot(Vec3& v){

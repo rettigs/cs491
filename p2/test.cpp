@@ -1,8 +1,8 @@
 #include "vec3.h"
 
 int main(int argc, char *argv[]){
-    Vec3 a = Vec3(4., 5., 6.);
-    Vec3 b = Vec3(1., 2., 3.);
+    Vec3 a = Vec3(4.5, -5., 0);
+    Vec3 b = Vec3(8.222, 4.3, 3.15);
 
                a.Print("    a =");
                b.Print("    b =");
