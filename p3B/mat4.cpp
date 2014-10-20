@@ -118,8 +118,8 @@ Mat4::SetRotateY(float deg)
 {
     SetIdentity();
     this->m[0][0] = cos(deg * M_PI / 180.0);
-    this->m[0][2] = -sin(deg * M_PI / 180.0);
-    this->m[2][0] = sin(deg * M_PI / 180.0);
+    this->m[0][2] = sin(deg * M_PI / 180.0);
+    this->m[2][0] = -sin(deg * M_PI / 180.0);
     this->m[2][2] = cos(deg * M_PI / 180.0);
 }
 
