@@ -137,10 +137,13 @@ struct keyframe
 struct keyframe KeyFrames[ ] =
 {
     //TODO
-    {   0,      20.,    50.,    0., 0., 0., 0.  },
-    {   8000,   200.,   50.,    400.,   90.,    0., 0.  },
-    {   16000,  20.,    500.,   0., 0., 90.,    0.  },
-    {   24000,      20.,    50.,    0., 0., 0., 0.  }
+    {   0,      20.,    50.,    5., 0., 0., 0.  },
+    {   200,    23.,    76.,    400.,   90.,    0., 0.  },
+    {   400,    432.,   9.,     400.,   90.,    90.,    0.  },
+    {   600,    650.,   254.,   467.,   90.,    90.,    90. },
+    {   800,    287.,   120.,   908.,   226.,   134.,   308.    },
+    {   1000,   790.,   530.,   323.,   423.,   42.,    37. },
+    {   1200,   20.,    50.,    5., 0., 0., 0.  }
 };
 
 const int NUMKEYFRAMES  = sizeof( KeyFrames ) / sizeof( struct keyframe );
@@ -240,19 +243,21 @@ Animate( void )
         {
             //TODO
             
-            //dx0dt = ?????
-            //dy0dt = ?????
-            //dz0dt = ?????
-            //dax0dt = ?????
-            //day0dt = ?????
-            //daz0dt = ?????
+            // ._0
+            dx0dt = KeyFrames[i].dxdf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            dy0dt = KeyFrames[i].dydf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            dz0dt = KeyFrames[i].dydf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            dax0dt = KeyFrames[i].daxdf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            day0dt = KeyFrames[i].daydf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            daz0dt = KeyFrames[i].dazdf * (KeyFrames[i+1].f - KeyFrames[i].f);
 
-            //dx1dt = ?????
-            //dy1dt = ?????
-            //dz1dt = ?????
-            //dax1dt = ?????
-            //day1dt = ?????
-            //daz1dt = ?????
+            // ._1
+            dx1dt = KeyFrames[i+1].dxdf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            dy1dt = KeyFrames[i+1].dydf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            dz1dt = KeyFrames[i+1].dzdf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            dax1dt = KeyFrames[i+1].daxdf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            day1dt = KeyFrames[i+1].daydf * (KeyFrames[i+1].f - KeyFrames[i].f);
+            daz1dt = KeyFrames[i+1].dazdf * (KeyFrames[i+1].f - KeyFrames[i].f);
 
             ax = KeyFrames[i].x;
             ay = KeyFrames[i].y;
@@ -261,28 +266,34 @@ Animate( void )
             aay = KeyFrames[i].ay;
             aaz = KeyFrames[i].az;
 
-            bx = KeyFrames[i].x;
-            by = KeyFrames[i].y;
-            bz = KeyFrames[i].z;
-            bax = KeyFrames[i].ax;
-            bay = KeyFrames[i].ay;
-            baz = KeyFrames[i].az;
+            bx = dx0dt;
+            by = dy0dt;
+            bz = dz0dt;
+            bax = dax0dt;
+            bay = day0dt;
+            baz = daz0dt;
+
+            cx = -3*KeyFrames[i].x + 3*KeyFrames[i+1].x - 2*dx0dt - dx1dt;
+            cy = -3*KeyFrames[i].y + 3*KeyFrames[i+1].y - 2*dy0dt - dy1dt;
+            cz = -3*KeyFrames[i].z + 3*KeyFrames[i+1].z - 2*dz0dt - dz1dt;
+            cax = -3*KeyFrames[i].ax + 3*KeyFrames[i+1].ax - 2*dax0dt - dax1dt;
+            cay = -3*KeyFrames[i].ay + 3*KeyFrames[i+1].ay - 2*day0dt - day1dt;
+            caz = -3*KeyFrames[i].az + 3*KeyFrames[i+1].az - 2*daz0dt - daz1dt;
+
+            dx = 2*KeyFrames[i].x + -2*KeyFrames[i+1].x + dx0dt + dx1dt;
+            dy = 2*KeyFrames[i].y + -2*KeyFrames[i+1].y + dy0dt + dy1dt;
+            dz = 2*KeyFrames[i].z + -2*KeyFrames[i+1].z + dz0dt + dz1dt;
+            dax = 2*KeyFrames[i].ax + -2*KeyFrames[i+1].ax + dax0dt + dax1dt;
+            day = 2*KeyFrames[i].ay + -2*KeyFrames[i+1].ay + day0dt + day1dt;
+            daz = 2*KeyFrames[i].az + -2*KeyFrames[i+1].az + daz0dt + daz1dt;
 
             t = (float)( NowFrame - KeyFrames[i].f )  /  (float)( KeyFrames[i+1].f - KeyFrames[i].f );
-            X = (1.-t) * KeyFrames[i].x  +  t * KeyFrames[i+1].x;
-            Y = (1.-t) * KeyFrames[i].y  +  t * KeyFrames[i+1].y;
-            Z = (1.-t) * KeyFrames[i].z  +  t * KeyFrames[i+1].z;
-            ThetaX = (1.-t) * KeyFrames[i].ax  +  t * KeyFrames[i+1].ax;
-            ThetaY = (1.-t) * KeyFrames[i].ay  +  t * KeyFrames[i+1].ay;
-            ThetaZ = (1.-t) * KeyFrames[i].az  +  t * KeyFrames[i+1].az;
-
-            //t = (float)( NowFrame - KeyFrames[i].f )  /  (float)( KeyFrames[i+1].f - KeyFrames[i].f );
-            //X = ax + t * ( bx + t * ( cx + t * dx ) );
-            //Y = ay + t * ( by + t * ( cy + t * dy ) );
-            //Z = az + t * ( bz + t * ( cz + t * dz ) );
-            //ThetaX = aax + t * ( bax + t * ( cax + t * dax ) );
-            //ThetaY = aay + t * ( bay + t * ( cay + t * dGay ) );
-            //ThetaZ = aaz + t * ( baz + t * ( caz + t * daz ) );
+            X = ax + t * ( bx + t * ( cx + t * dx ) );
+            Y = ay + t * ( by + t * ( cy + t * dy ) );
+            Z = az + t * ( bz + t * ( cz + t * dz ) );
+            ThetaX = aax + t * ( bax + t * ( cax + t * dax ) );
+            ThetaY = aay + t * ( bay + t * ( cay + t * day ) );
+            ThetaZ = aaz + t * ( baz + t * ( caz + t * daz ) );
         }
     }
 
@@ -577,12 +588,12 @@ InitGraphics( void )
             else
             {
                 //TODO
-                //KeyFrames[i].dxdf  = ?????
-                //KeyFrames[i].dydf  = ?????
-                //KeyFrames[i].dzdf  = ?????
-                //KeyFrames[i].daxdf = ?????
-                //KeyFrames[i].daydf = ?????
-                //KeyFrames[i].dazdf = ?????
+                KeyFrames[i].dxdf  = (KeyFrames[i+1].x - KeyFrames[i-1].x) / (KeyFrames[i+1].f - KeyFrames[i-1].f);
+                KeyFrames[i].dydf  = (KeyFrames[i+1].y - KeyFrames[i-1].y) / (KeyFrames[i+1].f - KeyFrames[i-1].f);
+                KeyFrames[i].dzdf  = (KeyFrames[i+1].z - KeyFrames[i-1].z) / (KeyFrames[i+1].f - KeyFrames[i-1].f);
+                KeyFrames[i].daxdf = (KeyFrames[i+1].ax - KeyFrames[i-1].ax) / (KeyFrames[i+1].f - KeyFrames[i-1].f);
+                KeyFrames[i].daydf = (KeyFrames[i+1].ay - KeyFrames[i-1].ay) / (KeyFrames[i+1].f - KeyFrames[i-1].f);
+                KeyFrames[i].dazdf = (KeyFrames[i+1].az - KeyFrames[i-1].az) / (KeyFrames[i+1].f - KeyFrames[i-1].f);
             }
         }
     }
