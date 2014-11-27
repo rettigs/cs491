@@ -1,3 +1,17 @@
+/*
+CS 491 Project #7: Particle System
+
+Fire!
+By Sean Rettig
+
+This particle system attempts to simulate fire!
+Particles start near y = 0 and wiggle around as they fly up, changing color from red to yellow, until they finally get too far from the rest of the fire and die.
+The positions of each particle are randomized at the start.
+The y velocities of each particle are randomized at the start.
+The x and z velocities of each particle are used as offsets for the sine waves that each particle follows upward and are randomized at the start.
+The birth and death times of each particle are randomized at the start, and each particle changes from red to yellow as it ages.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -168,7 +182,7 @@ struct particle
     float r, g, b;      // current color        
 };
 
-#define NUMPARTICLES    10000
+#define NUMPARTICLES    100000
 struct particle Particles[NUMPARTICLES];
 
 //
@@ -233,15 +247,17 @@ Animate( void )
     Time += DT;
 
     for(int i = 0; i < NUMPARTICLES; i++){
-        struct particle p = Particles[i];
+        if(Particles[i].t0 <= Time && Time <= Particles[i].t1){
+            struct particle p = Particles[i];
 
-        p.vy += GRAVITY * 0.01;        
-        p.y += p.vy;
+            p.y += p.vy;
+            p.x += sin(p.y/10 + p.vx);
+            p.z += sin(p.y/10 + p.vz);
 
-        p.x += p.vx;
-        p.z += p.vz;
+            p.g = (Time - p.t0) / (p.t1 - p.t0);
 
-        Particles[i] = p;
+            Particles[i] = p;
+        }
     }
     
     glutSetWindow( MainWindow );
@@ -388,7 +404,7 @@ Display( void )
 
     // TODO
 
-    glPointSize(2.0);
+    glPointSize(3.0);
     glBegin(GL_POINTS);
         for(int i = 0; i < NUMPARTICLES; i++){
             if(Particles[i].t0 <= Time && Time <= Particles[i].t1){
@@ -637,10 +653,10 @@ InitGraphics( void )
     for(int i = 0; i < NUMPARTICLES; i++){
         struct particle p;
 
-        p.x0 = Ranf(-50, 50); p.y0 = Ranf(-50, 50); p.z0 = Ranf(-50, 50);
-        p.vx0 = Ranf(-5.f, 5.f); p.vy0 = Ranf(-5.f, 5.f); p.vz0 = Ranf(-5.f, 5.f);
-        p.r0 = Ranf(0.f, 1.f); p.g0 = Ranf(0.f, 1.f); p.b0 = Ranf(0.f, 1.f);
-        p.t0 = Ranf(0.f, 100.f); p.t1 = Ranf(500.f, 1000.f);
+        p.x0 = Ranf(-50, 50); p.y0 = Ranf(-5, 5); p.z0 = Ranf(-50, 50);
+        p.vx0 = Ranf(0, 360); p.vy0 = Ranf(1.f, 3.f); p.vz0 = Ranf(0, 360);
+        p.r0 = 1.; p.g0 = 0.; p.b0 = 0.;
+        p.t0 = Ranf(0.1f, 100.f); p.t1 = p.t0 + Ranf(1.f, 4.f);
 
         Particles[i] = p;
     }
