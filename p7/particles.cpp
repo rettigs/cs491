@@ -19,7 +19,7 @@
 
 // title of these windows:
 
-const char *WINDOWTITLE = { "Particle System -- Joe Graphics" };
+const char *WINDOWTITLE = { "Particle System -- Sean Rettig" };
 const char *GLUITITLE   = { "User Interface Window" };
 
 // random parameters:                   
@@ -155,6 +155,21 @@ int Xmouse, Ymouse;     // mouse values
 float   Xrot, Yrot;     // rotation angles in degrees
 float   TransXYZ[3];        // set by glui translation widgets
 
+// TODO
+
+struct particle
+{
+    float x0, y0, z0;   // starting location    
+    float vx0, vy0, vz0;    // starting velocity        
+    float r0, g0, b0;   // starting color       
+    float t0, t1;       // birth time, death time   
+    float x, y, z;      // current location 
+    float vx, vy, vz;   // current velocity     
+    float r, g, b;      // current color        
+};
+
+#define NUMPARTICLES    10
+struct particle Particles[NUMPARTICLES];
 
 //
 // function prototypes:
@@ -213,10 +228,14 @@ Animate( void )
     // Here is where you advance your particles to reflect the current Time:
     // ****************************************
 
+    // TODO
     
+    Time += DT;
 
-
-
+    for(int i = 0; i < NUMPARTICLES; i++){
+        //Particles[i].x += 0.01;
+    }
+    
     glutSetWindow( MainWindow );
     glutPostRedisplay();
 }
@@ -359,11 +378,22 @@ Display( void )
     // Here is where you draw the current state of the particles:
     // ****************************************
 
+    // TODO
 
-
-
-
-
+    glBegin(GL_POINTS);
+        for(int i = 0; i < NUMPARTICLES; i++){
+            //if(Particles[i].t0 <= Time && Time <= Particles[i].t1){
+                struct particle p = Particles[i];
+                printf("Drawing particle %d at location (%f, %f, %f) with color (%f, %f, %f)\n", i, p.x, p.y, p.z, p.r, p.g, p.b);
+                glColor3f (Particles[i].r, Particles[i].g, Particles[i].b);
+                glPointSize(5.0);
+                glVertex3f(Particles[i].x, Particles[i].y, Particles[i].z);
+            //}
+        }
+    glEnd();
+    
+    printf("Random: %f\n", randi(-50, 50));
+    
     glutSwapBuffers();
     glFlush();
 }
@@ -596,10 +626,19 @@ InitGraphics( void )
     // Here is where you setup your particle system data structures just once:
     // ****************************************
 
+    // TODO
 
-
-
-
+    for(int i = 0; i < NUMPARTICLES; i++){
+        struct particle p;
+        p.x0 = Ranf(-50, 50); p.y0 = Ranf(-50, 50); p.z0 = Ranf(-50, 50);
+        p.vx0 = 5; p.vy0 = 5; p.vz0 = 5;
+        p.r0 = Ranf(0, 255); p.g0 = Ranf(0, 255); p.b0 = Ranf(0, 255);
+        p.t0 = 0; p.t1 = 50;
+        p.x = p.x0; p.y = p.y0; p.z = p.z0;
+        p.vx = p.vx0; p.vy = p.vy0; p.vz = p.vz0;        
+        p.r = p.r0; p.g = p.g0; p.b = p.b0;
+        Particles[i] = p;
+    }
 
 }
 
@@ -822,7 +861,7 @@ Reset( void )
     // Here is where you reset your particle system data structures to the initial configuration:
     // ****************************************
 
-
+    // TODO
 
 
     Time = TMIN;
