@@ -168,7 +168,7 @@ struct particle
     float r, g, b;      // current color        
 };
 
-#define NUMPARTICLES    10
+#define NUMPARTICLES    10000
 struct particle Particles[NUMPARTICLES];
 
 //
@@ -233,7 +233,15 @@ Animate( void )
     Time += DT;
 
     for(int i = 0; i < NUMPARTICLES; i++){
-        //Particles[i].x += 0.01;
+        struct particle p = Particles[i];
+
+        p.vy += GRAVITY * 0.01;        
+        p.y += p.vy;
+
+        p.x += p.vx;
+        p.z += p.vz;
+
+        Particles[i] = p;
     }
     
     glutSetWindow( MainWindow );
@@ -380,19 +388,17 @@ Display( void )
 
     // TODO
 
+    glPointSize(2.0);
     glBegin(GL_POINTS);
         for(int i = 0; i < NUMPARTICLES; i++){
-            //if(Particles[i].t0 <= Time && Time <= Particles[i].t1){
+            if(Particles[i].t0 <= Time && Time <= Particles[i].t1){
                 struct particle p = Particles[i];
-                printf("Drawing particle %d at location (%f, %f, %f) with color (%f, %f, %f)\n", i, p.x, p.y, p.z, p.r, p.g, p.b);
+                //printf("Drawing particle %d at location (%f, %f, %f) with color (%f, %f, %f)\n", i, p.x, p.y, p.z, p.r, p.g, p.b);
                 glColor3f (Particles[i].r, Particles[i].g, Particles[i].b);
-                glPointSize(5.0);
                 glVertex3f(Particles[i].x, Particles[i].y, Particles[i].z);
-            //}
+            }
         }
     glEnd();
-    
-    printf("Random: %f\n", randi(-50, 50));
     
     glutSwapBuffers();
     glFlush();
@@ -630,15 +636,16 @@ InitGraphics( void )
 
     for(int i = 0; i < NUMPARTICLES; i++){
         struct particle p;
+
         p.x0 = Ranf(-50, 50); p.y0 = Ranf(-50, 50); p.z0 = Ranf(-50, 50);
-        p.vx0 = 5; p.vy0 = 5; p.vz0 = 5;
-        p.r0 = Ranf(0, 255); p.g0 = Ranf(0, 255); p.b0 = Ranf(0, 255);
-        p.t0 = 0; p.t1 = 50;
-        p.x = p.x0; p.y = p.y0; p.z = p.z0;
-        p.vx = p.vx0; p.vy = p.vy0; p.vz = p.vz0;        
-        p.r = p.r0; p.g = p.g0; p.b = p.b0;
+        p.vx0 = Ranf(-5.f, 5.f); p.vy0 = Ranf(-5.f, 5.f); p.vz0 = Ranf(-5.f, 5.f);
+        p.r0 = Ranf(0.f, 1.f); p.g0 = Ranf(0.f, 1.f); p.b0 = Ranf(0.f, 1.f);
+        p.t0 = Ranf(0.f, 100.f); p.t1 = Ranf(500.f, 1000.f);
+
         Particles[i] = p;
     }
+
+    Reset();
 
 }
 
@@ -863,6 +870,13 @@ Reset( void )
 
     // TODO
 
+    for(int i = 0; i < NUMPARTICLES; i++){
+        struct particle p = Particles[i];
+        p.x = p.x0; p.y = p.y0; p.z = p.z0;
+        p.vx = p.vx0; p.vy = p.vy0; p.vz = p.vz0;        
+        p.r = p.r0; p.g = p.g0; p.b = p.b0;
+        Particles[i] = p;
+    }
 
     Time = TMIN;
 }
