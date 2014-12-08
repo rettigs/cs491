@@ -17,19 +17,19 @@
 
 // title of these windows:
 
-const char *WINDOWTITLE = { "Chain Demo -- Joe Graphics" };
+const char *WINDOWTITLE = { "Chain Demo -- Sean Rettig" };
 const char *GLUITITLE   = { "User Interface Window" };
 
+//TODO
 
+const float MASSMIN =  1.0
+const float MASSMAX =  4.0
 
-const float MASSMIN =  ?????
-const float MASSMAX =  ?????
+const float KMIN = 0.0
+const float KMAX = 2.0
 
-const float KMIN = ?????
-const float KMAX = ?????
-
-const float CDMIN =  ?????
-const float CDMAX =  ?????
+const float CDMIN =  0.5
+const float CDMAX =  1.5
 
 const float GMIN = -20.;
 const float GMAX =  20.;
@@ -206,6 +206,8 @@ Animate( void )
 {
     struct state State2[NUMNODES];
     struct derivatives Derivatives1[NUMNODES], Derivatives2[NUMNODES];
+
+    //TODO
 
     GetDerivs( ?????
     for( int node = 0; node < NUMNODES; node++ )
@@ -421,6 +423,8 @@ GetDerivs( struct state state[NUMNODES], struct derivatives derivs[NUMNODES] )
             xm = state[node-1].x - state[node].x;
             ym = state[node-1].y - state[node].y;
         }
+
+        //TODO
 
         float length = sqrt( xm*xm + ym*ym );       // to normailze the vector
         float stretch = length - LENGTH0;       // amount spring is stretched
