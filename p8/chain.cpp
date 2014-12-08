@@ -205,13 +205,6 @@ Animate( void )
     struct state State2[NUMNODES];
     struct derivatives Derivatives1[NUMNODES], Derivatives2[NUMNODES];
 
-    //TODO
-    
-    for( int node = 0; node < NUMNODES; node++ )
-    {
-        //printf("Node %d: %f, %f\n", node, State[node].x, State[node].y); //DEBUG
-    }
-
     for( int node = 0; node < NUMNODES; node++ ){
         GetDerivs(State, Derivatives1);
     }
@@ -428,9 +421,7 @@ GetDerivs( struct state state[NUMNODES], struct derivatives derivs[NUMNODES] )
             xm = state[node-1].x - state[node].x;
             ym = state[node-1].y - state[node].y;
         }
-
-        //TODO
-
+        
         float length = sqrt( xm*xm + ym*ym );       // to normailze the vector
         float stretch = length - LENGTH0;       // amount spring is stretched
         float force = K*(stretch);
