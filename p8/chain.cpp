@@ -20,16 +20,14 @@
 const char *WINDOWTITLE = { "Chain Demo -- Sean Rettig" };
 const char *GLUITITLE   = { "User Interface Window" };
 
-//TODO
+const float MASSMIN =  1.0;
+const float MASSMAX =  4.0;
 
-const float MASSMIN =  1.0
-const float MASSMAX =  4.0
+const float KMIN = 0.0;
+const float KMAX = 100.0;
 
-const float KMIN = 0.0
-const float KMAX = 2.0
-
-const float CDMIN =  0.5
-const float CDMAX =  1.5
+const float CDMIN =  0.5;
+const float CDMAX =  50.5;
 
 const float GMIN = -20.;
 const float GMAX =  20.;
@@ -208,8 +206,15 @@ Animate( void )
     struct derivatives Derivatives1[NUMNODES], Derivatives2[NUMNODES];
 
     //TODO
+    
+    for( int node = 0; node < NUMNODES; node++ )
+    {
+        printf("Node %d: %f, %f\n", node, State[node].x, State[node].y); //DEBUG
+    }
 
-    GetDerivs( ?????
+    for( int node = 0; node < NUMNODES; node++ ){
+        GetDerivs(State, Derivatives1);
+    }
     for( int node = 0; node < NUMNODES; node++ )
     {
         State2[node].y  = State[node].y  + Derivatives1[node].vy * Dt;
@@ -218,9 +223,9 @@ Animate( void )
         State2[node].x  = State[node].x  + Derivatives1[node].vx * Dt;
         State2[node].vx = State[node].vx + Derivatives1[node].ax * Dt;
     }
-
-    GetDerivs( ?????
-
+    for( int node = 0; node < NUMNODES; node++ ){
+        GetDerivs(State2, Derivatives2);
+    }
     for( int node = 0; node < NUMNODES; node++ )
     {
         float aavg = ( Derivatives1[node].ay + Derivatives2[node].ay ) / 2.;
@@ -428,7 +433,7 @@ GetDerivs( struct state state[NUMNODES], struct derivatives derivs[NUMNODES] )
 
         float length = sqrt( xm*xm + ym*ym );       // to normailze the vector
         float stretch = length - LENGTH0;       // amount spring is stretched
-        float force = ?????;
+        float force = K*(stretch);
         sumfx += force * xm / length;
         sumfy += force * ym / length;
 
@@ -436,11 +441,11 @@ GetDerivs( struct state state[NUMNODES], struct derivatives derivs[NUMNODES] )
         {
             xp = state[node+1].x - state[node].x;
             yp = state[node+1].y - state[node].y;
-            length = ?????
-            stretch = ?????
-            force = ?????
-            sumfx += ?????
-            sumfy += ?????
+            float length = sqrt( xm*xm + ym*ym );
+            float stretch = length - LENGTH0;
+            float force = K*(stretch);
+            sumfx += force * xm / length;
+            sumfy += force * ym / length;
         }
 
         float v = sqrt( state[node].vx*state[node].vx + state[node].vy*state[node].vy );
@@ -735,6 +740,7 @@ Reset( void )
     Y0 = 0.;
     Gravity = -9.8f;
     Dt = ( DTMIN + DTMAX ) / 2.f;
+
 
     for( int node = 0; node < NUMNODES; node++ )
     {
