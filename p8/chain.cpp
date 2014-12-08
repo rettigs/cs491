@@ -27,7 +27,7 @@ const float KMIN = 0.0;
 const float KMAX = 100.0;
 
 const float CDMIN =  0.5;
-const float CDMAX =  50.5;
+const float CDMAX =  4.5;
 
 const float GMIN = -20.;
 const float GMAX =  20.;
@@ -209,7 +209,7 @@ Animate( void )
     
     for( int node = 0; node < NUMNODES; node++ )
     {
-        printf("Node %d: %f, %f\n", node, State[node].x, State[node].y); //DEBUG
+        //printf("Node %d: %f, %f\n", node, State[node].x, State[node].y); //DEBUG
     }
 
     for( int node = 0; node < NUMNODES; node++ ){
@@ -441,11 +441,11 @@ GetDerivs( struct state state[NUMNODES], struct derivatives derivs[NUMNODES] )
         {
             xp = state[node+1].x - state[node].x;
             yp = state[node+1].y - state[node].y;
-            float length = sqrt( xm*xm + ym*ym );
+            float length = sqrt( xp*xp + yp*yp );
             float stretch = length - LENGTH0;
             float force = K*(stretch);
-            sumfx += force * xm / length;
-            sumfy += force * ym / length;
+            sumfx += force * xp / length;
+            sumfy += force * yp / length;
         }
 
         float v = sqrt( state[node].vx*state[node].vx + state[node].vy*state[node].vy );
